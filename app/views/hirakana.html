@@ -1,0 +1,51 @@
+
+            <div class="row">
+                <div class="col-md-4 col-sm-4 side-panel">
+                    <div ng-controller="ScoreGrid" class="left-hiragana">
+                        <div class="hira-holder">
+                            <div id="hira-{{$index}}" class="hira-ind fader" ng-class="{'fade-in': kanascore[$index].vis}" ng-repeat="n in kanascore">
+                                {{n.character}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    <div class="main-cont" ng-show="!kanaSet">
+                        <div class="row">
+                            <div class="col-md-12 introtext" ng-hide="correct">
+                                Which character set would you like to practice?
+                            </div>
+                        </div>
+                        <button class="btn-japanese intro" ng-click="setKanaSet(1)">Hiragana</button>
+                        <button class="btn-japanese intro" ng-click="setKanaSet(2)">Katakana</button>
+                    </div>
+                    <div class="main-cont" ng-show="kanaSet && score!='46'">
+                        <div class="row">
+                            <div class="col-md-12 smiddle" ng-hide="correct" style="font-size:30px;">Score: {{score}} / {{kanaTotal}}</div>
+                        </div> 
+                        <div class="row">
+                            <div class="col-md-12 smiddle" ng-hide="correct" style="font-size:90px;">{{correctKana.romaji}}</div>
+                        </div>
+                        <div class="row">
+                                   <div class="smiddle"><answer-button check-answer="isCorrect(options[0])" ng-attr-options="options[0]"></answer-button></div>
+                                    <div class="smiddle"><answer-button check-answer="isCorrect(options[1])" ng-attr-options="options[1]"></answer-button></div>
+                                    <div class="smiddle"><answer-button check-answer="isCorrect(options[2])" ng-attr-options="options[2]"></answer-button></div>
+                        </div>
+                        <div ng-bind="totalCorrect"></div>
+                    </div>
+                    <div class="main-cont" ng-show="score=='46'">
+                          <div class="col-md-12 introtext" ng-hide="correct">CONGRATS! You learnt a little something.
+                            </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-4 side-panel">
+                    <div ng-controller="ScoreGrid2" class="left-hiragana">
+                        <div class="hira-holder">
+                            <div id="hira-{{$index}}" class="hira-ind fader" ng-class="{'fade-in': kanascore2[$index].vis}" ng-repeat="n in kanascore2">
+                                {{n.character}}
+                            </div>
+                        </div>
+                    </div>
+                    <score-grid/>
+                </div>
+            </div>
