@@ -28,6 +28,10 @@ var kanaMod = angular
         templateUrl: 'views/hirakana.html',
         controller: 'ToBeMainController'
       })
+      .when('/knittykitty', {
+        templateUrl: 'views/knittykitty.html',
+        controller: 'KnittyController'
+      })
       .otherwise({
         redirectTo: '/'
       });
