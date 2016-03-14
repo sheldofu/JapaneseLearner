@@ -1,11 +1,12 @@
 
             <div class="row">
                 <div class="col-md-4 col-sm-4 side-panel">
-                    <div ng-controller="ScoreGrid" class="left-hiragana">
+                    <div class="left-hiragana">
                         <div class="hira-holder">
-                            <div id="hira-{{$index}}" class="hira-ind fader" ng-class="{'fade-in': kanascore[$index].vis}" ng-repeat="n in kanascore">
+                           <sc-grid set="1"></sc-grid>
+  <!--                           <div id="hira-{{$index}}" class="hira-ind fader" ng-class="{'fade-in': kanascore[$index].vis}" ng-repeat="n in kanascore">
                                 {{n.character}}
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -39,13 +40,13 @@
                     </div>
                 </div>
                 <div class="col-md-4 col-sm-4 side-panel">
-                    <div ng-controller="ScoreGrid2" class="left-hiragana">
+                    <div class="left-hiragana">    
                         <div class="hira-holder">
-                            <div id="hira-{{$index}}" class="hira-ind fader" ng-class="{'fade-in': kanascore2[$index].vis}" ng-repeat="n in kanascore2">
+                            <sc-grid set="0"></sc-grid>
+                        <!--     <div id="hira-{{$index}}" class="hira-ind fader" ng-class="{'fade-in': kanascore2[$index].vis}" ng-repeat="n in kanascore2">
                                 {{n.character}}
-                            </div>
+                            </div> -->
                         </div>
                     </div>
-                    <score-grid/>
                 </div>
             </div>

@@ -182,7 +182,7 @@ kanaMod.service('ScoreKeeper', [function() {
 
 }]);
 
-kanaMod.directive('answerButton',function() {
+kanaMod.directive('answerButton', function() {
     return {
         restrict:'E',
         scope: {
@@ -194,108 +194,66 @@ kanaMod.directive('answerButton',function() {
     };
 });
 
-kanaMod.controller('ScoreGrid', function(ScoreKeeper,KanaList,$scope,$interval,$timeout){
+kanaMod.directive('scGrid', function(){
+    return {
+        restrict: 'E',
+        scope: {
+            set: '='
+        },
+        template: '<div id="hira-{{$index}}" class="hira-ind fader" ng-class="{fadein: kanascore[$index].vis}" ng-repeat="n in kanascore">{{n.character}}</div>',
+        link: function(scope, element, attrs) {
+        },
+        controller: function(ScoreKeeper,KanaList,$scope,$interval,$timeout){
+         console.log($scope.set);
+           $scope.kanascore = 0;
 
-    $scope.kanascore = 0;
+            KanaList.getKana($scope.set).then(function (data){
+                    for (var count=0;count<data.length;count++) {
+                        data[count].vis = false; 
+                    }
+                    $scope.kanascore = data;
+                });
 
-    KanaList.getKana(1).then(function (data){
-            for (var count=0;count<data.length;count++) {
-                data[count].vis = false; 
-            }
-            $scope.kanascore = data;
-        });
+            $scope.$on('questionCorrect', function (event, data){
+                for (var x=0; x < $scope.kanascore.length; x++){
+                    if ($scope.kanascore[x].id === data.correctId){
+                        $scope.kanascore[x].vis = true; 
+                    }
+                }
+            });
 
-    $scope.$on('questionCorrect', function (event, data){
-        for (var x=0; x < $scope.kanascore.length; x++){
-            if ($scope.kanascore[x].id === data.correctId){
-                $scope.kanascore[x].vis = true; 
-            }
-        }
-    });
+            $scope.$on('gameStarted', function (){
+                $interval.cancel($scope.showKana);
+                $interval.cancel($scope.hideKana);
+                for (var x=0; x < $scope.kanascore.length; x++) {
+                    $scope.kanascore[x].vis = false;
+                }
+            });
 
-    $scope.$on('gameStarted', function (){
-        $interval.cancel($scope.showKana);
-        $interval.cancel($scope.hideKana);
-        for (var x=0; x < $scope.kanascore.length; x++) {
-            $scope.kanascore[x].vis = false;
-        }
-    });
+            var timeCount = 0;
+            var cancelTimeCount = 0;
+            
+            $scope.showKana = $interval(function(){  
+                 $scope.kanascore[timeCount].vis = true;
+                 timeCount++;
+                 //console.log(timeCount);
+                 if (timeCount===46) {
+                    // $interval.cancel(showKana);
+                    timeCount = 0;
+                 }
+            },200);
 
-    var timeCount = 0;
-    var cancelTimeCount = 0;
-    
-    $scope.showKana = $interval(function(){  
-         $scope.kanascore[timeCount].vis = true;
-         timeCount++;
-         //console.log(timeCount);
-         if (timeCount===46) {
-            // $interval.cancel(showKana);
-            timeCount = 0;
-         }
-    },200);
-
-    $timeout(function() {
-        $scope.hideKana = $interval(function(){
-            $scope.kanascore[cancelTimeCount].vis = false;
-            cancelTimeCount++;
-            //console.log(cancelTimeCount);
-            if (cancelTimeCount===46) {
-                // $interval.cancel(hideKana);
-                cancelTimeCount = 0;
-            }
-        }, 200);
-    }, 1200);
-}); 
-
-kanaMod.controller('ScoreGrid2', function(ScoreKeeper,KanaList,$scope,$interval,$timeout){
-
-    $scope.kanascore2 = 0;
-
-    KanaList.getKana(0).then(function (data){
-            for (var count=0;count<data.length;count++) {
-                data[count].vis = false; 
-            }
-            $scope.kanascore2 = data;
-        });
-
-    $scope.$on('questionCorrect', function (event, data){
-        for (var x=0; x < $scope.kanascore2.length; x++){
-            if ($scope.kanascore2[x].id === data.correctId){
-                $scope.kanascore2[x].vis = true; 
-            }
-        }
-    });
-
-    $scope.$on('gameStarted', function (){
-        $interval.cancel($scope.showKana);
-        $interval.cancel($scope.hideKana);
-        for (var x=0; x < $scope.kanascore2.length; x++) {
-            $scope.kanascore2[x].vis = false;
-        }
-    });
-
-    var timeCount = 0;
-    var cancelTimeCount = 0;
-    
-    $scope.showKana = $interval(function(){  
-         $scope.kanascore2[timeCount].vis = true;
-         timeCount++;
-         //console.log(timeCount);
-         if (timeCount===46) {
-            // $interval.cancel(showKana);
-            timeCount = 0;
-         }
-    },200);
-
-    $timeout(function() {
-        $scope.hideKana= $interval(function(){
-            $scope.kanascore2[cancelTimeCount].vis = false;
-            cancelTimeCount++;
-            //console.log(cancelTimeCount);
-            if (cancelTimeCount===46) {
-                // $interval.cancel(hideKana);
-                cancelTimeCount = 0;
-            }
-        }, 200);
-    }, 1200);
-}); 
+            $timeout(function() {
+                $scope.hideKana = $interval(function(){
+                    $scope.kanascore[cancelTimeCount].vis = false;
+                    cancelTimeCount++;
+                    //console.log(cancelTimeCount);
+                    if (cancelTimeCount===46) {
+                        // $interval.cancel(hideKana);
+                        cancelTimeCount = 0;
+                    }
+                }, 200);
+            }, 1200);
+                }
+    }
+});

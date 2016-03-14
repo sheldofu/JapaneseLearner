@@ -124,7 +124,7 @@ html {
     transition: all 1s ease-in-out;
 }
 
-.fade-in {
+.fadein {
     opacity: 1;
 }
 
