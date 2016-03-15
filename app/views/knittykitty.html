@@ -1,3 +1,4 @@
+<h1>COMING SOON!</h1>
 <div id="angref" class="container"> 
 	<div class="row">
 		<h1>Knitty Kitty!</h1>
@@ -51,51 +52,51 @@ canvas {
 </style>
 
 <script>
-$(document).ready(function(){
+// $(document).ready(function(){
 
-	var scopeReference = angular.element(document.getElementById('angref')).scope();
+// 	var scopeReference = angular.element(document.getElementById('angref')).scope();
 
-	// document.getElementById('knittyCanvas');
-    var stage = new createjs.Stage("knittyCanvas");
+// 	// document.getElementById('knittyCanvas');
+//     var stage = new createjs.Stage("knittyCanvas");
 
-	var knittyKitty = new createjs.Bitmap("../images/knittykitty.png");
-	// var circle = new createjs.Shape();
-	// circle.graphics.beginFill("DeepSkyBlue").drawCircle(0, 0, 20);
-	knittyKitty.x = 50;
-	knittyKitty.y = 100;
-	stage.addChild(knittyKitty);
+// 	var knittyKitty = new createjs.Bitmap("../images/knittykitty.png");
+// 	// var circle = new createjs.Shape();
+// 	// circle.graphics.beginFill("DeepSkyBlue").drawCircle(0, 0, 20);
+// 	knittyKitty.x = 50;
+// 	knittyKitty.y = 100;
+// 	stage.addChild(knittyKitty);
 
-	var haji = new createjs.Text("Hajimemashite", "60px Arial", "#000000");
- 	haji.x = 170;
- 	haji.y = 350;
- 	haji.alpha = 0;
- 	haji.textBaseline = "alphabetic";
-	// stage.addChild(text);
-	stage.update();
+// 	var haji = new createjs.Text("Hajimemashite", "60px Arial", "#000000");
+//  	haji.x = 170;
+//  	haji.y = 350;
+//  	haji.alpha = 0;
+//  	haji.textBaseline = "alphabetic";
+// 	// stage.addChild(text);
+// 	stage.update();
 
-    // var logo = document.getElementById("knitty");
-    // TweenLite.to(circle, 1, {left:"632px"});
-	var tl = new TimelineMax();
-	var t2 = new TimelineMax();
+//     // var logo = document.getElementById("knitty");
+//     // TweenLite.to(circle, 1, {left:"632px"});
+// 	var tl = new TimelineMax();
+// 	var t2 = new TimelineMax();
 
-	tl.to(knittyKitty, 0.5, {bezier:[{x:50, y:100}, {x:100, y:50}, {x:150, y:100}], ease:Power1.easeInOut, onUpdate:stage.update, onUpdateScope:stage});
-	tl.to(knittyKitty, 0.5, {bezier:[{x:150, y:100}, {x:200, y:50}, {x:250, y:100}], ease:Power1.easeInOut, onUpdate:stage.update, onUpdateScope:stage, onComplete:(function() {console.log('done1')})});
-	tl.to(knittyKitty, 0.5, {bezier:[{x:250, y:100}, {x:300, y:50}, {x:350, y:100}], ease:Power1.easeInOut, onUpdate:stage.update, onUpdateScope:stage}).addCallback(function() {
-			// stage.addChild(haji); 
-			// stage.update();
-			updateDialog();
-		});
-	// tl.to(haji, 2, {alpha:1, ease:Power1.easeInOut, onUpdate:stage.update, onUpdateScope:stage})
+// 	tl.to(knittyKitty, 0.5, {bezier:[{x:50, y:100}, {x:100, y:50}, {x:150, y:100}], ease:Power1.easeInOut, onUpdate:stage.update, onUpdateScope:stage});
+// 	tl.to(knittyKitty, 0.5, {bezier:[{x:150, y:100}, {x:200, y:50}, {x:250, y:100}], ease:Power1.easeInOut, onUpdate:stage.update, onUpdateScope:stage, onComplete:(function() {console.log('done1')})});
+// 	tl.to(knittyKitty, 0.5, {bezier:[{x:250, y:100}, {x:300, y:50}, {x:350, y:100}], ease:Power1.easeInOut, onUpdate:stage.update, onUpdateScope:stage}).addCallback(function() {
+// 			// stage.addChild(haji); 
+// 			// stage.update();
+// 			updateDialog();
+// 		});
+// 	// tl.to(haji, 2, {alpha:1, ease:Power1.easeInOut, onUpdate:stage.update, onUpdateScope:stage})
 
 
-	 //let's define the type as "soft" instead of using the default "thru"
-	// TweenMax.to(document.getElementById("knitty"), 5, {bezier:{type:"soft", values:[{x:100, y:250}, {x:300, y:0}, {x:500, y:250}], autoRotate:true}, ease:Power1.easeInOut});
+// 	 //let's define the type as "soft" instead of using the default "thru"
+// 	// TweenMax.to(document.getElementById("knitty"), 5, {bezier:{type:"soft", values:[{x:100, y:250}, {x:300, y:0}, {x:500, y:250}], autoRotate:true}, ease:Power1.easeInOut});
 
-	function updateDialog() {
-		scopeReference.$apply(function(){
-			scopeReference.dialogueIncrement();
-		});
-	};
+// 	function updateDialog() {
+// 		scopeReference.$apply(function(){
+// 			scopeReference.dialogueIncrement();
+// 		});
+// 	};
 
-});
+// });
 </script>

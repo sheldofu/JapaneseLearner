@@ -118,8 +118,6 @@ kanaMod.controller('ToBeMainController', function(ScoreKeeper, AudioService, Kan
         var returnedKana = ScoreKeeper.newKana($scope.kana);
         $scope.options = returnedKana[0]; 
         $scope.correctKana = returnedKana[1];
-        // $scope.options = ScoreKeeper.newKana($scope.kana);
-        // $scope.correctKana = ScoreKeeper.correctKana($scope.options);
         AudioService.play($scope.sound + $scope.correctKana.romaji + ".m4a");
         for (var x = 0; x < $scope.kana.length; x++) {
             if ($scope.kana[x].id === $scope.correctKana.id) {
@@ -127,17 +125,6 @@ kanaMod.controller('ToBeMainController', function(ScoreKeeper, AudioService, Kan
             }
         }
     };
-
-    // $scope.setCorrectKana = function() {
-    //     $scope.correctKana = ScoreKeeper.correctKana($scope.options);
-    //     AudioService.play($scope.sound);
-    //     for (var x = 0; x < $scope.kana.length; x++) {
-    //         if ($scope.kana[x].id === $scope.correctKana.id) {
-    //             $scope.kana[x].used = true;
-    //         }
-    //     }
-    // };
-
 });
 
 kanaMod.service('ScoreKeeper', [function() {
@@ -170,15 +157,12 @@ kanaMod.service('ScoreKeeper', [function() {
             }             
         }
 
-        var correctOption = options[Math.floor((Math.random()*3))];
+        var randomCorrectOption = Math.floor((Math.random()*3));
+        options[randomCorrectOption] = remainingKana[Math.floor((Math.random()*remainingKana.length))];
+        var correctOption = options[randomCorrectOption];
 
         return [options, correctOption];
     };
-
-    // this.correctKana = function(options) {
-    //     var correctOption = Math.floor((Math.random()*3));
-    //     return options[correctOption];
-    // };
 
 }]);
 
