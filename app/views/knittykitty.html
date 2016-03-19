@@ -3,8 +3,25 @@
 	<div class="row">
 		<h1>Knitty Kitty!</h1>
 		<div class="col-sm-3 dialogue-holder">
-			<div class="knitty-header">Knitty Kitty Says</div>
-			<div class="knitty-text">KK:Hello...</div>
+			<div>
+				<div class="knitty-header">Knitty Kitty Says</div>
+			</div>
+			<div class="seperator">
+				<div class="sub-head">Romaji</div>
+				<div class="knitty-speech">Hajimemashite</div>
+			</div>
+			<div class="seperator">
+				<div class="sub-head">Kana</div>
+				<div class="knitty-speech">はじめまして</div>
+			</div>
+			<div class="seperator">
+				<div class="sub-head">Meaning</div>
+				<div class="knitty-speech">Pleased to meet you</div>
+			</div>
+			<div class="seperator">
+				<div class="sub-head">Listen</div>
+				<div class="knitty-speech">Play Button</div>
+			</div>
 		</div>
 		<div class="col-sm-6">
 			<canvas width="800" height="400" id="knittyCanvas">I'm afraid your browser doesn't support canvas...</canvas>
@@ -24,6 +41,25 @@
 canvas {
 	/*border:1px solid black;*/
 	width: 100%;
+}
+
+.dialogue-holder .seperator {
+	height:22%;
+}
+
+.dialogue-holder .knitty-speech {
+	text-align: center;
+}
+
+.dialogue-holder .sub-head {
+	text-align: center;
+	background-color:#c0c0c0;
+	font-weight: bold;
+}
+
+
+.dialogue-holder p{
+	padding:15px;
 }
 
 .dialogue-holder .knitty-header{
@@ -52,51 +88,59 @@ canvas {
 </style>
 
 <script>
-// $(document).ready(function(){
 
-// 	var scopeReference = angular.element(document.getElementById('angref')).scope();
+$(document).ready(function(){
 
-// 	// document.getElementById('knittyCanvas');
-//     var stage = new createjs.Stage("knittyCanvas");
+	var scopeReference = angular.element(document.getElementById('angref')).scope();
 
-// 	var knittyKitty = new createjs.Bitmap("../images/knittykitty.png");
-// 	// var circle = new createjs.Shape();
-// 	// circle.graphics.beginFill("DeepSkyBlue").drawCircle(0, 0, 20);
-// 	knittyKitty.x = 50;
-// 	knittyKitty.y = 100;
-// 	stage.addChild(knittyKitty);
+	// document.getElementById('knittyCanvas');
+    var stage = new createjs.Stage("knittyCanvas");
 
-// 	var haji = new createjs.Text("Hajimemashite", "60px Arial", "#000000");
-//  	haji.x = 170;
-//  	haji.y = 350;
-//  	haji.alpha = 0;
-//  	haji.textBaseline = "alphabetic";
-// 	// stage.addChild(text);
-// 	stage.update();
+	var knittyKitty = new createjs.Bitmap("../images/knittykitty.png");
+	// var circle = new createjs.Shape();
+	// circle.graphics.beginFill("DeepSkyBlue").drawCircle(0, 0, 20);
+	knittyKitty.x = 50;
+	knittyKitty.y = 100;
+	stage.addChild(knittyKitty);
 
-//     // var logo = document.getElementById("knitty");
-//     // TweenLite.to(circle, 1, {left:"632px"});
-// 	var tl = new TimelineMax();
-// 	var t2 = new TimelineMax();
+	var haji = new createjs.Text("Hajimemashite", "60px Arial", "#000000");
+ 	haji.x = 170;
+ 	haji.y = 350;
+ 	haji.alpha = 0;
+ 	haji.textBaseline = "alphabetic";
+	// stage.addChild(text);
+	stage.update();
 
-// 	tl.to(knittyKitty, 0.5, {bezier:[{x:50, y:100}, {x:100, y:50}, {x:150, y:100}], ease:Power1.easeInOut, onUpdate:stage.update, onUpdateScope:stage});
-// 	tl.to(knittyKitty, 0.5, {bezier:[{x:150, y:100}, {x:200, y:50}, {x:250, y:100}], ease:Power1.easeInOut, onUpdate:stage.update, onUpdateScope:stage, onComplete:(function() {console.log('done1')})});
-// 	tl.to(knittyKitty, 0.5, {bezier:[{x:250, y:100}, {x:300, y:50}, {x:350, y:100}], ease:Power1.easeInOut, onUpdate:stage.update, onUpdateScope:stage}).addCallback(function() {
-// 			// stage.addChild(haji); 
-// 			// stage.update();
-// 			updateDialog();
-// 		});
-// 	// tl.to(haji, 2, {alpha:1, ease:Power1.easeInOut, onUpdate:stage.update, onUpdateScope:stage})
+    // var logo = document.getElementById("knitty");
+    // TweenLite.to(circle, 1, {left:"632px"});
+	var tl = new TimelineMax();
+	var t2 = new TimelineMax({repeat:-1,paused:true,repeatDelay:2});
+
+	tl.to(knittyKitty, 0.5, {bezier:[{x:50, y:100}, {x:100, y:50}, {x:150, y:100}], ease:Power1.easeInOut, onUpdate:stage.update, onUpdateScope:stage});
+	tl.to(knittyKitty, 0.5, {bezier:[{x:150, y:100}, {x:200, y:50}, {x:250, y:100}], ease:Power1.easeInOut, onUpdate:stage.update, onUpdateScope:stage, onComplete:(function() {console.log('done1')})});
+	tl.to(knittyKitty, 0.5, {bezier:[{x:250, y:100}, {x:300, y:50}, {x:350, y:100}], ease:Power1.easeInOut, onUpdate:stage.update, onUpdateScope:stage}).addCallback(function() {
+			// stage.addChild(haji); 
+			// stage.update();
+			updateDialog();
+			t2.resume();
+		});
+
+	t2.to(knittyKitty, 0.5, {y:80, onUpdate:stage.update, onUpdateScope:stage, ease:Power1.easeInOut});
+	t2.to(knittyKitty, 0.5, {y:100, onUpdate:stage.update, onUpdateScope:stage, ease:Elastic.easeOut});
+
+	// var bounce = TweenMax.to(knittyKitty, 0.5, {y:80});
+	// t2.add(bounce,4);
+	// tl.to(haji, 2, {alpha:1, ease:Power1.easeInOut, onUpdate:stage.update, onUpdateScope:stage})
 
 
-// 	 //let's define the type as "soft" instead of using the default "thru"
-// 	// TweenMax.to(document.getElementById("knitty"), 5, {bezier:{type:"soft", values:[{x:100, y:250}, {x:300, y:0}, {x:500, y:250}], autoRotate:true}, ease:Power1.easeInOut});
+	 //let's define the type as "soft" instead of using the default "thru"
+	// TweenMax.to(document.getElementById("knitty"), 5, {bezier:{type:"soft", values:[{x:100, y:250}, {x:300, y:0}, {x:500, y:250}], autoRotate:true}, ease:Power1.easeInOut});
 
-// 	function updateDialog() {
-// 		scopeReference.$apply(function(){
-// 			scopeReference.dialogueIncrement();
-// 		});
-// 	};
+	function updateDialog() {
+		scopeReference.$apply(function(){
+			scopeReference.dialogueIncrement();
+		});
+	};
 
-// });
+});
 </script>

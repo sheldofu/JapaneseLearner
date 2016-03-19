@@ -22,15 +22,18 @@ var kanaMod = angular
       .when('/', {
         templateUrl: 'views/main.html',
         controller: 'MainCtrl',
-        controllerAs: 'main'
+        controllerAs: 'main',
+        tab: 'mains'
       })
       .when('/hirakana', {
         templateUrl: 'views/hirakana.html',
-        controller: 'ToBeMainController'
+        controller: 'ToBeMainController',
+        tab: 'hirakana'
       })
       .when('/knittykitty', {
         templateUrl: 'views/knittykitty.html',
-        controller: 'KnittyController'
+        controller: 'KnittyController',
+        tab: 'knittykitty'
       })
       .otherwise({
         redirectTo: '/'

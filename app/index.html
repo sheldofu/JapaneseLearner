@@ -40,9 +40,9 @@
           <div class="collapse navbar-collapse" id="js-navbar-collapse">
 
             <ul class="nav navbar-nav">
-              <li class="active"><a href="#/">Home</a></li>
-              <li><a ng-href="#/hirakana">Learn Kana</a></li>
-              <li><a ng-href="#/knittykitty">Knitty Kitty Adventures</a></li>
+              <li ng-class="{active: $route.current.tab == 'mains'}"><a href="#/">Home</a></li>
+              <li ng-class="{active: $route.current.tab == 'hirakana'}"><a ng-href="#/hirakana">Learn Kana</a></li>
+              <li ng-class="{active: $route.current.tab == 'knittykitty'}"><a ng-href="#/knittykitty">Knitty Kitty Adventures</a></li>
             </ul>
           </div>
         </div>
@@ -82,6 +82,11 @@
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-touch/angular-touch.js"></script>
+    <!--- The following scripts are necessary to do TweenLite tweens on CSS properties -->
+    <script type="text/javascript" src="bower_components/gsap/src/minified/TweenMax.min.js"></script>
+    <script type="text/javascript" src="bower_components/EaselJS/lib/easeljs-0.8.2.combined.js"></script>
+
+
     <!-- endbower -->
     <!-- endbuild -->
 
