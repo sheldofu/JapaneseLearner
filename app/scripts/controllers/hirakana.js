@@ -18,56 +18,53 @@
  */
 'use strict';
 
-kanaMod.factory('KanaList', ['$http', function ($http) {
-    //refactor to only call file once then store data
-    var KanaList = {};
-    var kanaset = {};
+kanaMod.factory('KanaList', ['$http', '$q', function ($http, $q) {
+
+    let KanaList = {};
+    let kanaset = {};
     
-    var hiraganaSet = $http.get('res/kanalist.json')
-                    .then(function(response) {
-                      if (typeof response.data === 'object') {
+    return {
+        getKana: function (set) {
+            if (set == 1) {
+                return $http.get('res/kanalist.json')
+                .then(function(response) {
+                    console.log(response);
+                    if (typeof response.data === 'object') {
                             return response.data;
                         }            
-                    });
-
-    var katakanaSet = $http.get('res/katakana.json')
-                    .then(function(response) {
-                      if (typeof response.data === 'object') {
-                            return response.data;
-                        }            
-                    });
-
-    KanaList.getKana = function(set) {
-        if (set === 1) {
-            kanaset = hiraganaSet;
-        } else {
-            kanaset = katakanaSet;
+                })
+                .catch(function(response){
+                    return $q.reject(response);
+                })
+            } else {
+                return $http.get('res/katakana.json')
+                .then(function(response) {
+                if (typeof response.data === 'object') {
+                        return response.data;
+                    }            
+                })
+                .catch(function(response){
+                    return $q.reject(response);
+                });
+            }
         }
-        return kanaset;
-    };
-
-    // Kanalist.incrementScore = function() 
- 
-    return KanaList;
+    }
 
 }]);
 
 kanaMod.factory('AudioService', [function() {
-  var audioElement = document.createElement('audio'); // <-- Magic trick here
+  let audioElement = document.createElement('audio'); 
   return {
     audioElement: audioElement,
 
     play: function(filename) {
         audioElement.src = filename;
-        audioElement.play();     //  <-- Thats all you need
+        audioElement.play();
     }
-    // Exersise for the reader - extend this service to include other functions
-    // like pausing, etc, etc.
-
   };
 }]);
 
-kanaMod.controller('ToBeMainController', function(ScoreKeeper, AudioService, KanaList, $scope){
+kanaMod.controller('HirakanaController', function(ScoreKeeper, AudioService, KanaList, $scope){
     $scope.score = 0;
     $scope.options = [];
     $scope.kana = {};
@@ -76,14 +73,6 @@ kanaMod.controller('ToBeMainController', function(ScoreKeeper, AudioService, Kan
     $scope.kanaSet = 0;
     $scope.sound = 'res/audio/';
     $scope.kanaTotal = 0;
-
-    $scope.gameInProgress = function() {
-        if ($scope.kanaset && $scope.score!=2) {
-            return true
-        } else {
-            return false;
-        }
-    };
 
     $scope.isCorrect = function(selectedOption) {
         $scope.correct = ScoreKeeper.isCorrect(selectedOption, $scope.correctKana);
@@ -99,67 +88,63 @@ kanaMod.controller('ToBeMainController', function(ScoreKeeper, AudioService, Kan
     };
 
     $scope.setKanaSet = function(set){
-        $scope.$broadcast('gameStarted',{
-                game: 'start'
-            });
+        $scope.$broadcast('gameStarted');
         $scope.kanaSet = set;
         KanaList.getKana($scope.kanaSet)
         .then(function (data){
-            $scope.kana = data;
-            for (var x = 0; x < $scope.kana.length; x++) {
-                $scope.kana[x].used = false;
-            }
-            $scope.kanaTotal = data.length;
+            $scope.kana = data.map((kana) => {
+                kana.used = false;
+                return kana
+            });
+            $scope.kanaTotal = $scope.kana.length;
             $scope.kanaOptions();
+        })
+        .catch(function(error){
+            console.log(error);
         });
+        
     };
 
     $scope.kanaOptions = function() {
-        var returnedKana = ScoreKeeper.newKana($scope.kana);
+        let returnedKana = ScoreKeeper.newKana($scope.kana);
         $scope.options = returnedKana[0]; 
         $scope.correctKana = returnedKana[1];
         AudioService.play($scope.sound + $scope.correctKana.romaji + ".m4a");
-        for (var x = 0; x < $scope.kana.length; x++) {
-            if ($scope.kana[x].id === $scope.correctKana.id) {
-                $scope.kana[x].used = true;
+        $scope.kana = $scope.kana.map((kana) => {
+            if (kana.id === $scope.correctKana.id) {
+                kana.used = true;
             }
-        }
+            return kana
+        });
+
     };
 });
 
 kanaMod.service('ScoreKeeper', [function() {
 
-    this.isCorrect = function(chosen, correct){
-        if (chosen === correct) {
-            return true;
-        } else {
-            return false;
-        }
-    };
+    this.isCorrect = (chosen, correct) => chosen === correct ? true : false;
 
     this.newKana = function(kana) {
-        var remainingKana = [];
-        for (var x = 0; x < kana.length; x++) {
-            if (kana[x].used === false) {
-                remainingKana.push(kana[x]);
-            }
-        }
+        
+        let remainingKana = [];
+        let options = [];
 
-        var options = [];
+        remainingKana = kana.filter(val => val.used === false);
 
         options[0] = kana[Math.floor((Math.random()*kana.length))];
         options[1] = kana[Math.floor((Math.random()*kana.length))];
         options[2] = kana[Math.floor((Math.random()*kana.length))];
 
-        for (var x=1; x < options.length; x++) {
-            if (options[x].romaji == options[x-1].romaji){
-                options[x] = kana[Math.floor((Math.random()*kana.length))]; 
-            }             
+        for (let i=0; i < options.length; i++) {
+            for (let x=0; x < options.length; x++) {
+                if ((options[i].romaji == options[x].romaji) && (i != x)){
+                    options[i] = kana[Math.floor((Math.random()*kana.length))]; 
+                }             
+            }
         }
 
-        var randomCorrectOption = Math.floor((Math.random()*3));
-        options[randomCorrectOption] = remainingKana[Math.floor((Math.random()*remainingKana.length))];
-        var correctOption = options[randomCorrectOption];
+        let randomCorrectOption = Math.floor((Math.random()*3));
+        let correctOption = options[randomCorrectOption];
 
         return [options, correctOption];
     };
@@ -184,22 +169,29 @@ kanaMod.directive('scGrid', function(){
         scope: {
             set: '='
         },
-        template: '<div id="hira-{{$index}}" class="hira-ind fader" ng-class="{fadein: kanascore[$index].vis}" ng-repeat="n in kanascore">{{n.character}}</div>',
+        template: '<div id="hira-{{$index}}" class="hira-ind fader" ng-class="{fadein: kanascore[$index].vis}" ng-repeat="n in kanascore track by n.id">{{n.character}}</div>',
         link: function(scope, element, attrs) {
         },
         controller: function(ScoreKeeper,KanaList,$scope,$interval,$timeout){
-         console.log($scope.set);
-           $scope.kanascore = 0;
+            console.log($scope.set);
+            $scope.kanascore = 0;
+            $scope.gameRunning = false;
 
-            KanaList.getKana($scope.set).then(function (data){
-                    for (var count=0;count<data.length;count++) {
-                        data[count].vis = false; 
+            KanaList.getKana($scope.set)
+                .then(function (data){
+                    $scope.kanascore = data.map((kana) => {
+                        kana.vis = false;
+                        return kana;
+                    })
+                })
+                .catch(function(error){
+                        console.log(error);
+                        throw new Error("Couldn't retrieve katakana file: " + error.data);
                     }
-                    $scope.kanascore = data;
-                });
+                )
 
             $scope.$on('questionCorrect', function (event, data){
-                for (var x=0; x < $scope.kanascore.length; x++){
+                for (let x=0; x < $scope.kanascore.length; x++){
                     if ($scope.kanascore[x].id === data.correctId){
                         $scope.kanascore[x].vis = true; 
                     }
@@ -207,37 +199,34 @@ kanaMod.directive('scGrid', function(){
             });
 
             $scope.$on('gameStarted', function (){
+                $scope.gameRunning = true;
                 $interval.cancel($scope.showKana);
                 $interval.cancel($scope.hideKana);
-                for (var x=0; x < $scope.kanascore.length; x++) {
-                    $scope.kanascore[x].vis = false;
-                }
+                $scope.kanascore.map(kana => kana.vis = false);
             });
 
-            var timeCount = 0;
-            var cancelTimeCount = 0;
+            let timeCount = 0;
+            let cancelTimeCount = 0;
             
             $scope.showKana = $interval(function(){  
                  $scope.kanascore[timeCount].vis = true;
                  timeCount++;
-                 //console.log(timeCount);
                  if (timeCount===46) {
-                    // $interval.cancel(showKana);
                     timeCount = 0;
                  }
             },200);
 
             $timeout(function() {
-                $scope.hideKana = $interval(function(){
-                    $scope.kanascore[cancelTimeCount].vis = false;
-                    cancelTimeCount++;
-                    //console.log(cancelTimeCount);
-                    if (cancelTimeCount===46) {
-                        // $interval.cancel(hideKana);
-                        cancelTimeCount = 0;
-                    }
-                }, 200);
-            }, 1200);
+                if ($scope.gameRunning == false) { //stops interval being set later on if game started before interval initialised
+                    $scope.hideKana = $interval(function(){
+                        $scope.kanascore[cancelTimeCount].vis = false;
+                        cancelTimeCount++;
+                        if (cancelTimeCount===46) {
+                            cancelTimeCount = 0;
+                        }
+                    }, 200);
                 }
+            }, 1200);
+        }
     }
 });

@@ -9,6 +9,8 @@
 
 module.exports = function (grunt) {
 
+
+  var modRewrite = require('connect-modrewrite');
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
 
@@ -89,6 +91,10 @@ module.exports = function (grunt) {
                 '/app/styles',
                 connect.static('./app/styles')
               ),
+              
+                modRewrite(['^[^\\.]*$ /index.html [L]']),
+                connect.static('dist'),
+            
               connect.static(appConfig.app)
             ];
           }

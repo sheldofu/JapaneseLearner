@@ -17,7 +17,7 @@ var kanaMod = angular
     'ngSanitize',
     'ngTouch'
   ])
-  .config(function ($routeProvider) {
+  .config(function ($routeProvider, $locationProvider) {
     $routeProvider
       .when('/', {
         templateUrl: 'views/main.html',
@@ -27,7 +27,7 @@ var kanaMod = angular
       })
       .when('/hirakana', {
         templateUrl: 'views/hirakana.html',
-        controller: 'ToBeMainController',
+        controller: 'HirakanaController',
         tab: 'hirakana'
       })
       .when('/knittykitty', {
@@ -38,4 +38,6 @@ var kanaMod = angular
       .otherwise({
         redirectTo: '/'
       });
+
+      $locationProvider.html5Mode(true);
   });
